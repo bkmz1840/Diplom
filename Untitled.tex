@@ -396,17 +396,53 @@
 данные}\label{ux432ux445ux43eux434ux43dux44bux435-ux434ux430ux43dux43dux44bux435}}
 
     \begin{Verbatim}[commandchars=\\\{\}]
---------------------------------------------------------------------------------
------
-| H |  1.0  |  2.0  |  3.0  |  4.0  |  5.0  |  6.0  |  7.0  |  8.0  |  9.0  |
-10.0  |
---------------------------------------------------------------------------------
------
-| M |  1.0  |  3.0  |  5.0  |  7.0  |  9.0  | 11.0  | 13.0  | 15.0  | 17.0  |
-19.0  |
---------------------------------------------------------------------------------
------
-Температура среды T: 280
+|     H     |     M     |
+|-----------|-----------|
+|    0.0    |    0.0    |
+|-----------|-----------|
+|  1180.938 |  2556.283 |
+|-----------|-----------|
+|  2440.104 |  4428.242 |
+|-----------|-----------|
+|  4031.793 |  6027.773 |
+|-----------|-----------|
+|  5229.511 |  6910.699 |
+|-----------|-----------|
+|  7626.041 |  8221.296 |
+|-----------|-----------|
+|  10699.36 |  9410.598 |
+|-----------|-----------|
+|  14474.99 |  10489.65 |
+|-----------|-----------|
+|  19641.84 |  11595.96 |
+|-----------|-----------|
+|  24962.42 |  12474.35 |
+|-----------|-----------|
+|  31840.19 |  13369.09 |
+|-----------|-----------|
+|  42980.77 |  14446.37 |
+|-----------|-----------|
+|  52399.15 |  15123.58 |
+|-----------|-----------|
+|  63757.78 |  15761.81 |
+|-----------|-----------|
+|  79328.52 |  16431.62 |
+|-----------|-----------|
+|  95193.2  |  16956.37 |
+|-----------|-----------|
+|  125468.2 |  17695.34 |
+|-----------|-----------|
+|  155054.4 |  18206.03 |
+|-----------|-----------|
+|  185547.2 |  18599.44 |
+|-----------|-----------|
+|  213781.0 |  18883.3  |
+|-----------|-----------|
+|  241325.7 |  19096.08 |
+|-----------|-----------|
+|  268296.1 |  19260.66 |
+|\_\_\_\_\_\_\_\_\_\_\_|\_\_\_\_\_\_\_\_\_\_\_|
+Температура среды T: 290
     \end{Verbatim}
 
     \begin{center}
@@ -425,7 +461,7 @@
     Приведем величин к безразмерным. Для этого введем реперные значения:
 
     \begin{Verbatim}[commandchars=\\\{\}]
-Реперное значение темературы: 293 K
+Реперное значение темературы: 273 K
 Реперное значение mu: 1e-19 А²∙м
 Реперное значение H: 100 кА/м
 Реперное значение ro: 10000000000000000000000 1/м\^{}3
@@ -434,17 +470,53 @@
     Таблица входных данных с безразмерными величинами:
 
     \begin{Verbatim}[commandchars=\\\{\}]
---------------------------------------------------------------------------------
------
-| H | 0.01  | 0.02  | 0.03  | 0.04  | 0.05  | 0.06  | 0.07  | 0.08  | 0.09  |
-0.1  |
---------------------------------------------------------------------------------
------
-| M |0.05263|0.15789|0.26316|0.36842|0.47368|0.57895|0.68421|0.78947|0.89474|
-1.0  |
---------------------------------------------------------------------------------
------
-Реперное значение M: 19.0 кА/м
+|     H     |     M     |
+|-----------|-----------|
+|    0.0    |    0.0    |
+|-----------|-----------|
+|  11.80938 |  0.13272  |
+|-----------|-----------|
+|  24.40104 |  0.22991  |
+|-----------|-----------|
+|  40.31793 |  0.31296  |
+|-----------|-----------|
+|  52.29511 |   0.3588  |
+|-----------|-----------|
+|  76.26041 |  0.42684  |
+|-----------|-----------|
+|  106.9936 |  0.48859  |
+|-----------|-----------|
+|  144.7499 |  0.54462  |
+|-----------|-----------|
+|  196.4184 |  0.60205  |
+|-----------|-----------|
+|  249.6242 |  0.64766  |
+|-----------|-----------|
+|  318.4019 |  0.69411  |
+|-----------|-----------|
+|  429.8077 |  0.75005  |
+|-----------|-----------|
+|  523.9915 |  0.78521  |
+|-----------|-----------|
+|  637.5778 |  0.81834  |
+|-----------|-----------|
+|  793.2852 |  0.85312  |
+|-----------|-----------|
+|  951.932  |  0.88036  |
+|-----------|-----------|
+|  1254.682 |  0.91873  |
+|-----------|-----------|
+|  1550.544 |  0.94524  |
+|-----------|-----------|
+|  1855.472 |  0.96567  |
+|-----------|-----------|
+|  2137.81  |  0.98041  |
+|-----------|-----------|
+|  2413.257 |  0.99146  |
+|-----------|-----------|
+|  2682.961 |    1.0    |
+|\_\_\_\_\_\_\_\_\_\_\_|\_\_\_\_\_\_\_\_\_\_\_|
+Реперное значение M: 19260.66 кА/м
     \end{Verbatim}
 
     Приведем формулу к безразмерному виду, где переменные со звездой -
@@ -461,8 +533,8 @@
 
     \begin{Verbatim}[commandchars=\\\{\}]
 Посчитаем a и b:
-a: 52.63157894736842
-b: 0.003250637407273163
+a: 0.05191930079239237
+b: 0.8568231841791744
     \end{Verbatim}
 
     Разобъем частицы на $I = 6$ фракций.
@@ -482,35 +554,34 @@ b: 0.003250637407273163
     \begin{Verbatim}[commandchars=\\\{\}]
 m: [-1.1, -0.7000000000000001, -0.30000000000000004, 0.09999999999999998, 0.5,
 0.9]
+m: [-1.0, -0.6, -0.19999999999999996, 0.20000000000000007, 0.6000000000000001,
+1.0]
+m: [-0.9, -0.5, -0.09999999999999998, 0.30000000000000004, 0.7000000000000001,
+1.1]
+m: [-0.8, -0.4, 0.0, 0.4, 0.8, 1.2000000000000002]
+BREAK: -0.7000000000000001 --- -0.7000000000000001
+|                      mu                       | |                       p
+|
+|-----------------------------------------------|
+|-----------------------------------------------|
+|  -1.1 |  -0.7 |  -0.3 |  0.1  |  0.5  |  0.9  | |  0.0  |  0.0  |  1.0  |  1.0
+|  1.0  |  -2.0 |
+|  -1.0 |  -0.6 |  -0.2 |  0.2  |  0.6  |  1.0  | |  0.0  |  0.0  |  1.0  |  1.0
+|  1.0  |  -2.0 |
+|  -0.9 |  -0.5 |  -0.1 |  0.3  |  0.7  |  1.1  | |  0.0  |  0.0  |  1.0  |  1.0
+|  1.0  |  -2.0 |
+|  -0.8 |  -0.4 |  0.0  |  0.4  |  0.8  |  1.2  | |  0.0  |  1.0  |  0.17 |  1.0
+|  1.0  | -2.17 |
+|-----------------------------------------------|
+|-----------------------------------------------|
     \end{Verbatim}
 
     \begin{Verbatim}[commandchars=\\\{\}, frame=single, framerule=2mm, rulecolor=\color{outerrorbackground}]
-\textcolor{ansi-red-intense}{\textbf{---------------------------------------------------------------------------}}
-\textcolor{ansi-red-intense}{\textbf{TypeError}}                                 Traceback (most recent call last)
-Cell \textcolor{ansi-green-intense}{\textbf{In[29], line 78}}
-\textcolor{ansi-green}{     75} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{if}} mu\_border \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{==} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{-}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{10000}:
-\textcolor{ansi-green}{     76}     mu\_border \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{=} mus[\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{1}]
-\textcolor{ansi-green-intense}{\textbf{---> 78}} res \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{=} \setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{dual\_annealing\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{(\strut}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{\textbf{lambda}\strut}}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{ \strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{p\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{:\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{ \strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{optimization\_func\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{(\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{p\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{,\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{ \strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{mus\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{)\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{,\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{ \strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{bounds\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{)\strut}
-\textcolor{ansi-green}{     79} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{if}} res\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{.}success:
-\textcolor{ansi-green}{     80}     optimization\_iterations\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{.}append(OptimizationResult(res\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{.}x, mus))
+\textcolor{ansi-cyan-intense}{\textbf{  Cell }}\textcolor{ansi-green-intense}{\textbf{In[11], line 1}}
+\textcolor{ansi-yellow-intense}{\textbf{    for r in result:}}
+\textcolor{ansi-white-intense}{\textbf{                    \^{}}}
+\textcolor{ansi-red-intense}{\textbf{IndentationError}}\textcolor{ansi-red-intense}{\textbf{:}} expected an indented block
 
-File \textcolor{ansi-green-intense}{\textbf{c:\textbackslash{}users\textbackslash{}bkmz1\textbackslash{}pycharmprojects\textbackslash{}diplom\textbackslash{}venv\textbackslash{}lib\textbackslash{}site-packages\textbackslash{}scipy\textbackslash{}optimize\textbackslash{}\_dual\_annealing.py:653}}, in \textcolor{ansi-cyan}{dual\_annealing}\textcolor{ansi-blue-intense}{\textbf{(func, bounds, args, maxiter, minimizer\_kwargs, initial\_temp, restart\_temp\_ratio, visit, accept, maxfun, seed, no\_local\_search, callback, x0)}}
-\textcolor{ansi-green}{    651} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{95,135,135}}{\# Initialization of the energy state}
-\textcolor{ansi-green}{    652} energy\_state \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{=} EnergyState(lower, upper, callback)
-\textcolor{ansi-green-intense}{\textbf{--> 653}} \setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{energy\_state\strut}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{.\strut}}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{reset\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{(\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{func\_wrapper\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{,\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{ \strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{rand\_state\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{,\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{ \strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{x0\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{)\strut}
-\textcolor{ansi-green}{    654} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{95,135,135}}{\# Minimum value of annealing temperature reached to perform}
-\textcolor{ansi-green}{    655} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{95,135,135}}{\# re-annealing}
-\textcolor{ansi-green}{    656} temperature\_restart \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{=} initial\_temp \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{*} restart\_temp\_ratio
-
-File \textcolor{ansi-green-intense}{\textbf{c:\textbackslash{}users\textbackslash{}bkmz1\textbackslash{}pycharmprojects\textbackslash{}diplom\textbackslash{}venv\textbackslash{}lib\textbackslash{}site-packages\textbackslash{}scipy\textbackslash{}optimize\textbackslash{}\_dual\_annealing.py:175}}, in \textcolor{ansi-cyan}{EnergyState.reset}\textcolor{ansi-blue-intense}{\textbf{(self, func\_wrapper, rand\_gen, x0)}}
-\textcolor{ansi-green}{    173} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{if}} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{self}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{.}current\_energy \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{175,0,255}}{\textbf{is}} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{None}}:
-\textcolor{ansi-green}{    174}     \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{raise}} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{215,95,95}}{\textbf{ValueError}}(\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{175,0,0}}{'}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{175,0,0}}{Objective function is returning None}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{175,0,0}}{'})
-\textcolor{ansi-green-intense}{\textbf{--> 175}} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{if}} (\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{175,0,255}}{\textbf{not}} \setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{np\strut}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{.\strut}}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{isfinite\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{(\strut}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{self\strut}}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{.\strut}}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{current\_energy\strut}\setlength{\fboxsep}{0pt}\colorbox{ansi-yellow}{)\strut} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{175,0,255}}{\textbf{or}} np\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{.}isnan(
-\textcolor{ansi-green}{    176}         \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{self}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{.}current\_energy)):
-\textcolor{ansi-green}{    177}     \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{if}} reinit\_counter \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{>}\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{=} EnergyState\def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{.}MAX\_REINIT\_COUNT:
-\textcolor{ansi-green}{    178}         init\_error \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{98,98,98}}{=} \def\tcRGB{\textcolor[RGB]}\expandafter\tcRGB\expandafter{\detokenize{0,135,0}}{\textbf{False}}
-
-\textcolor{ansi-red-intense}{\textbf{TypeError}}: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
     \end{Verbatim}
 
 

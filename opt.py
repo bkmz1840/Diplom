@@ -5,12 +5,43 @@ from mpmath import coth, log
 from scipy.optimize import shgo, dual_annealing
 
 import numpy as np
+import math
 
 
 class OptimizationResult:
     def __init__(self, p, mus):
         self.p = p
         self.mus = mus
+
+    def form_cell(self, num):
+        divider = (7 - len(str(num))) / 2
+        if round(divider) == divider:
+            d = int(divider)
+            return f"{' ' * d}{num}{' ' * d}"
+
+        l = int(math.ceil(divider))
+        r = int(math.floor(divider))
+        return f"{' ' * l}{num}{' ' * r}"
+    
+    def form_line(self):
+        res = []
+        for m in self.mus:
+            res.append(f"|{self.form_cell(round(m, 2))}")
+        res[-1] += "| "
+        
+        for p in self.p:
+            res.append(f"|{self.form_cell(round(p, 2))}")
+        res[-1] += "|"
+        return ''.join(res)
+    
+    def __str__(self):
+        p_str = map(str, self.p)
+        m_str = map(str, self.mus)
+        res = "*" * 5 + "\n" \
+            + ', '.join(m_str) + '\n' \
+            + ', '.join(p_str) + '\n' \
+            + "*" * 5
+        return res
 
 
 def L(z):
