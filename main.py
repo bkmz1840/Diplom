@@ -21,19 +21,19 @@ H = list(map(lambda e: e[0], input_data))
 M = list(map(lambda e: e[1], input_data))
 
 T_r = 273
-mu_r = 10 ** (-19)
+mu_r = 1
 H_r = 100
 ro_r = 10 ** 22
-mu_0 = 1.256637 * 10 ** (-6)
-k_b = 1.380649 * 10 ** (-23)
+mu_0 = 1.256637
+k_b = 1.380649
 
 H_w = [h / H_r for h in H]
 M_r = max(M) + 10 ** (-3)
 M_w = [m / M_r for m in M]
 T_w = T / T_r
 
-a = (ro_r * mu_r) / M_r
-b = (mu_0 * mu_r * H_r) / (k_b * T_w)
+a = 1000 / M_r # mu_r * ro_r = 10^(-19) * 10^22 = 1000
+b = (mu_0 * 1 * 1) / (k_b * T_w) # Степени 10 сократились
 
 I = 6
 mu_min = -1.1
@@ -43,15 +43,16 @@ mu_step = 0.4
 mu_border = -10000
 optimization_iterations = []
 optimizers = {}
-initial_guess = [10, 0.16666, 0.16666, 0.16666, 0.16666, 0.16666]
 bounds = [
-    [-10 ** 10, 10 ** 10],
+    [1, 1.1],
+    [0, 1],
     [0, 1],
     [0, 1],
     [0, 1],
     [0, 1],
     [0, 1],
 ]
+constraints = ({'type': 'eq', "fun": constraint})
 cur_mu_min = mu_min
 result = []
 while True:
@@ -66,13 +67,17 @@ while True:
         break
     
     cur_mu_min += 0.1
-    
+
+    initial_guess = [1]
+    initial_guess.extend(get_start_guess(6))
+
     res = minimize(
         lambda p: optimization_func(p, mus, n, a, b, H_w, M_w),
         initial_guess,
-        bounds=bounds
+        bounds=bounds,
+        constraints=constraints
     )
-    
+
     found_params = list(res.x)[1:]
     p_I = 1 - sum(found_params)
     found_params.append(p_I)

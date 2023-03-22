@@ -6,6 +6,7 @@ from scipy.optimize import shgo, dual_annealing
 
 import numpy as np
 import math
+import random
 
 
 class OptimizationResult:
@@ -50,25 +51,38 @@ def L(z):
     return coth(z) - 1/z
 
 
-def get_sum(arr):
+def get_sum(p):
     sum = 0
-    for e in arr:
+    for e in p:
         sum += e
-    return e
+    return sum
+
+
+def get_start_guess(count):
+    random.seed()
+    guess = []
+    cur_sum = 0
+    
+    for i in range(count - 1):
+        cur_param = round(random.uniform(0.0, 1.0 - cur_sum), 1)
+        cur_sum += cur_param
+        guess.append(cur_param)
+    
+    guess.append(round((1.0 - cur_sum), 1))
+    return guess
 
 
 def M_func(params, mus, a_arg, b_arg, H_i):
     sum = 0
-    ro = params[0]
+    m = params[0]
     p = params[1:]
-
-    p_I = 1 - get_sum(p)
-    p = np.append(p, p_I)
+    sum_m = 0
 
     for k in range(len(p)):
         sum += p[k] * mus[k] * L(b_arg * mus[k] * H_i)
-    
-    return a_arg * ro * sum
+        sum_m = p[k] * mus[k]
+
+    return a_arg * (m / sum_m) * sum
 
 
 def get_mus(start, step, I):
@@ -94,3 +108,7 @@ def optimization_func(params, mus, n, a, b, H, M):
         sum += R(term)
 
     return sum
+
+
+def constraint(p):
+    return 1 - get_sum(p[1:])
