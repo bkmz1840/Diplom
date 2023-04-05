@@ -16,10 +16,9 @@ ro_r = 10 ** 22
 mu_0 = 1.256637
 k_b = 1.380649
 I = 6
-mu_min = -1.1
-mu_max = 1.3
-mu_step = 0.4
-step = 0.1
+mu_min = 0.000001
+mu_step = 0.00001
+step = 0.000001
 
 input_data = []
 for line in data:
@@ -30,27 +29,21 @@ for line in data:
 H = list(map(lambda e: e[0], input_data))
 M = list(map(lambda e: e[1], input_data))
 
-M_r = max(M) + 10 ** (-3)
+M_r = max(M)
 T_w = T / T_r
 
 H_w = [h / H_r for h in H]
 M_w = [m / M_r for m in M]
 
 a = 1000 / M_r # mu_r * ro_r = 10^(-19) * 10^22 = 1000
-b = (mu_0 * 1 * 1) / (k_b * T_w) # Степени 10 сократились
+b = (mu_0 * 1 * 1) / (k_b * T_w * T_r) # Степени 10 сократились
 
 mu_border = -10000
-optimization_iterations = []
-optimizers = {}
 bounds = [
-    [1, 1.1],
-    [0, 1],
-    [0, 1],
-    [0, 1],
-    [0, 1],
-    [0, 1],
-    [0, 1],
+    [1, 10],
 ]
+bounds.extend([[0, 1] for _ in range(I)])
+
 constraints = ({'type': 'eq', "fun": constraint})
 cur_mu_min = mu_min
 result = []
@@ -71,9 +64,11 @@ while True:
     else:
         not_success = False
 
-    initial_guess = [1]
-    initial_guess.extend(get_start_guess(6))
+    initial_guess = get_start_guess(I) #[1]
+    print(f'Init guess: {initial_guess}')
+    #initial_guess.extend(get_start_guess(I))
 
+    print('Start minimization')
     res = minimize(
         lambda p: optimization_func(p, mus, n, a, b, H_w, M_w),
         initial_guess,
@@ -86,17 +81,39 @@ while True:
         not_success = True
         continue
 
+    print(f'Res result: {res.fun}')
     found_params = list(res.x)[1:]
-    result.append(OptimizationResult(found_params, mus))
+    result.append(OptimizationResult(found_params, mus, found_params[0]))
 
-header = "|" + " " * 22 + "mu" + " " * 23 + "| |" + " " * 23 + "p" + " " * 23 + "|"
-splitter = "|" + "-" * (7 * 6 + 5) + "| |" + "-" * (7 * 6 + 5) + "|"
+div1 = (7 * I + 3) // 2
+div2 = div1 + 1
+div3 = 8 * I - 1
+header = "|" + " " * div1 + "mu" + " " * div2 + "| |" + " " * div2 + "p" + " " * div2 + "|"
+splitter = "|" + "-" * div3 + "| |" + "-" * div3 + "|"
 print(header)
 print(splitter)
 for r in result:
     print(r.form_line())
 print(splitter)
 
+H_t = []
+M_t = []
+for r in result:
+    back_v = r.back(a, b, H_w)
+    h_t = []
+    m_t = []
+    for backed_v in back_v:
+        h, m = backed_v
+        h_t.append(h)
+        m_t.append(m)
+    H_t.append(h_t)
+    M_t.append(m_t)
+
+plt.grid()
+plt.plot(H_w, M_w, color="black")
+for i in range(len(H_t)):
+    plt.plot(H_t[i], M_t[i])
+plt.show()
 
 x = []
 y = []

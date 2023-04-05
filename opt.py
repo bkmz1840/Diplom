@@ -10,9 +10,10 @@ import random
 
 
 class OptimizationResult:
-    def __init__(self, p, mus):
+    def __init__(self, p, mus, ro):
         self.p = p
         self.mus = mus
+        self.ro = ro
 
     def form_cell(self, num):
         divider = (7 - len(str(num))) / 2
@@ -34,6 +35,16 @@ class OptimizationResult:
             res.append(f"|{self.form_cell(round(p, 2))}")
         res[-1] += "|"
         return ''.join(res)
+    
+    def back(self, a, b, H):
+        res = []
+        for h in H:
+            params = [self.ro]
+            params.extend(self.p)
+            m = M_func(params, self.mus, a, b, h)
+            res.append((h, m))
+
+        return res
     
     def __str__(self):
         p_str = map(str, self.p)
@@ -61,6 +72,7 @@ def get_sum(p):
 def get_start_guess(count):
     random.seed()
     guess = []
+    guess.append(round(random.uniform(1.0, 10), 1))
     cur_sum = 0
     
     for i in range(count - 1):
@@ -74,15 +86,13 @@ def get_start_guess(count):
 
 def M_func(params, mus, a_arg, b_arg, H_i):
     sum = 0
-    m = params[0]
+    ro = params[0]
     p = params[1:]
-    sum_m = 0
 
     for k in range(len(p)):
         sum += p[k] * mus[k] * L(b_arg * mus[k] * H_i)
-        sum_m = p[k] * mus[k]
 
-    return a_arg * (m / sum_m) * sum
+    return a_arg * (ro * 10 ** 8) * sum
 
 
 def get_mus(start, step, I):
