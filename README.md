@@ -9,3 +9,6 @@ For run jupiter notebook prompt this to activated virtual enviroment command pro
 
 For compile insert this inro command promt:
 `jupyter nbconvert --to latex --no-input Example.ipynb`
+
+## Структура
+Jupyter notebook файл

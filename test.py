@@ -1,11 +1,12 @@
 from scipy.optimize import minimize
+from GPyOpt.methods import BayesianOptimization
 
 import random
 
 
 def f(p):
-    print(f'p: {p}')
-    return 2 * p[0] + 3 * p[1]
+    vars = p[0]
+    return 2 * vars[0] + 3 * vars[1]
 
 
 def constraint(p):
@@ -31,12 +32,21 @@ def get_start_guess(count):
 
 
 bounds = [
-    [0, 1],
-    [0, 1]
+    (0, 1),
+    (0, 1)
 ]
 guess = get_start_guess(2)
 constraints = ({'type': 'eq', "fun": constraint})
 
-res = minimize(f, guess, bounds=bounds, constraints=constraints)
+domain = [
+    {'name': 'x', 'type': 'continuous', 'domain': (0, 1)},
+    {'name': 'y', 'type': 'continuous', 'domain': (0, 1)},
+]
 
-print(res)
+myBopt = BayesianOptimization(f=f, domain=domain)
+myBopt.run_optimization(max_iter=15)
+myBopt.plot_acquisition()
+
+# res = gp_minimize(f, bounds, n_calls=50)
+
+# print(res)

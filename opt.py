@@ -33,18 +33,8 @@ class OptimizationResult:
         
         for p in self.p:
             res.append(f"|{self.form_cell(round(p, 2))}")
-        res[-1] += "|"
+        res[-1] += f"| |{self.form_cell(round(self.ro, 2))}|"
         return ''.join(res)
-    
-    def back(self, a, b, H):
-        res = []
-        for h in H:
-            params = [self.ro]
-            params.extend(self.p)
-            m = M_func(params, self.mus, a, b, h)
-            res.append((h, m))
-
-        return res
     
     def __str__(self):
         p_str = map(str, self.p)
@@ -72,7 +62,8 @@ def get_sum(p):
 def get_start_guess(count):
     random.seed()
     guess = []
-    guess.append(round(random.uniform(1.0, 10), 1))
+    guess.append(round(random.uniform(0, 10), 1))
+    guess.append(random.randint(0, 10))
     cur_sum = 0
     
     for i in range(count - 1):
@@ -86,13 +77,13 @@ def get_start_guess(count):
 
 def M_func(params, mus, a_arg, b_arg, H_i):
     sum = 0
-    ro = params[0]
-    p = params[1:]
+    ro = params[0] * 10 ** params[1]
+    p = params[2:]
 
     for k in range(len(p)):
         sum += p[k] * mus[k] * L(b_arg * mus[k] * H_i)
 
-    return a_arg * (ro * 10 ** 8) * sum
+    return a_arg * ro * sum
 
 
 def get_mus(start, step, I):
@@ -122,3 +113,53 @@ def optimization_func(params, mus, n, a, b, H, M):
 
 def constraint(p):
     return 1 - get_sum(p[1:])
+
+
+def form_input(data):
+    input_data = []
+    
+    H = []
+    M = []
+    for line in data:
+        H.append(float(line[0]))
+        M.append(float(line[1]))
+    
+    input_data.append(H)
+    input_data.append(M)
+    return input_data
+
+
+def gradient_respecting_bounds(bounds, fun, eps=1e-8):
+    """bounds: list of tuples (lower, upper)"""
+    def gradient(x):
+        fx = fun(x)
+        grad = np.zeros(len(x))
+        for k in range(len(x)):
+            d = np.zeros(len(x))
+            d[k] = eps if x[k] + eps <= bounds[k][1] else -eps
+            grad[k] = (fun(x + d) - fx) / d[k]
+        return grad
+    return gradient
+
+
+def results_to_M(results, a, b, H, I):
+    ro = 0
+    divider = I * len(results)
+    mus = []
+    ps = []
+    for r in results:
+        ro += r.ro
+        for i in range(I):
+            p = r.p[i] / divider
+            mus.append(r.mus[i])
+            ps.append(p)
+    ro /= len(results)
+    
+    results = []
+    params = [ro, 0]
+    params.extend(ps)
+    for h in H:
+        m = M_func(params, mus, a, b, h)
+        results.append((h, m))
+    
+    return results
