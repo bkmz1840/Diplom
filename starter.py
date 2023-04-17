@@ -36,7 +36,7 @@ def test():
     data = np.loadtxt('input.txt')
     
     H = data[:, 0][1:3]
-    H_w = [h / H_r for h in H]
+    H_w = H/ H_r
     M_r = 4428.242
     
     a = 1000 / M_r
@@ -52,12 +52,15 @@ def test():
         M_func(params2, get_mus(mu_min + step, mu_step, I), a, b, H_w[1]),
     ]
     
-    data = [f"{H_w[i] * H_r} {M_w[i] * M_r}" for i in range(len(H_w))]
+    # data = [f"{H_w[i] * H_r} {M_w[i] * M_r}" for i in range(len(H_w))]
+    new_data = np.empty((H_w.shape[0], 2))
+    new_data[:, 0] =  H_w * H_r
+    new_data[:, 1] =  np.array(M_w) * M_r
     
     print('Test data:')
-    print("\n".join(data))
+    print(new_data)
     
-    optimize_main(data, {
+    optimize_main(new_data, {
         "T": T,
         "mu_r": mu_r,
         "H_r": H_r,
@@ -72,4 +75,5 @@ def test():
 
 
 if __name__ == "__main__":
+    # main()
     test()

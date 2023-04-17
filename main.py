@@ -18,16 +18,14 @@ def optimize_main(data, params, M_r=None):
     mu_step = params["mu_step"]
     step = params["step"]
 
-    input_data = form_input(data)
-
-    H = input_data[0]
-    M = input_data[1]
+    H = data[:, 0]
+    M = data[:, 1]
 
     M_r = np.max(M) if M_r is None else M_r
     print(f'M_r: {M_r}')
 
-    H_w = [h / H_r for h in H]
-    M_w = [m / M_r for m in M]
+    H_w = H / H_r 
+    M_w = M / M_r 
 
     a = 1000 / M_r # mu_r * ro_r = 10^(-19) * 10^22 = 1000
     b = (mu_0 * 1 * 1) / (k_b * T) # Степени 10 сократились
@@ -110,11 +108,8 @@ def optimize_main(data, params, M_r=None):
     plt.plot(H_t, M_t, color="red")
     plt.show()
 
-    x = []
-    y = []
-    for r in result:
-        x.extend(map(lambda e: round(e, 2), r.mus))
-        y.extend(map(lambda e: round(e, 2), r.p))
+    x = np.round(r.mus, 3)
+    y = np.round(r.p, 3)
 
     plt.grid()
     plt.scatter(x, y)

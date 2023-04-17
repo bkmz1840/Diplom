@@ -1,5 +1,5 @@
-from humpday import recommend
-from humpday.optimizers.alloptimizers import optimizer_from_name
+# from humpday import recommend
+# from humpday.optimizers.alloptimizers import optimizer_from_name
 
 from mpmath import coth, log
 from scipy.optimize import shgo, dual_annealing
@@ -112,7 +112,7 @@ def optimization_func(params, mus, n, a, b, H, M):
 
 
 def constraint(p):
-    return 1 - get_sum(p[1:])
+    return 1 - np.sum(p[1:])
 
 
 def form_input(data):
