@@ -1,4 +1,4 @@
-from main import optimize_main
+from main import optimize_main, get_minimization_result
 from opt import form_input, M_func, get_mus
 import numpy as np
 
@@ -35,29 +35,44 @@ def main():
 def test():
     data = np.loadtxt('input.txt')
     
-    H = data[:, 0][1:3]
+    H = data[:, 0]
+    M = data[:, 1]
+    
+    print(H, M, sep='\n')
+    
+    M_r = np.max(M)
+    
     H_w = [h / H_r for h in H]
-    M_r = 4428.242
+    a = 10 ** 3 / M_r
+    b = (mu_0 * 10 ** (-2) * H_r) / (k_b * T)
     
-    a = 1000 / M_r
-    b = (mu_0 * 1 * 1) / (k_b * T)
+    test_params = [10, 0.8, 0.2]
+    test_mus = [1, 10]
     
-    print(f"H_w: {H_w}")
-    print(f"a: {a}\nb: {b}")
-    
-    params1 = [100, 0.8, 0.2]
-    params2 = [100, 0.9, 0.1]
     M_w = [
-        M_func(params1, get_mus(mu_min, mu_step, I), a, b, H_w[0]),
-        M_func(params2, get_mus(mu_min + step, mu_step, I), a, b, H_w[1]),
+        M_func(test_params, test_mus, a, b, h)
+        for h in H_w
     ]
+    print(f'M_w: {M_w}')
     
-    data = [f"{H_w[i] * H_r} {M_w[i] * M_r}" for i in range(len(H_w))]
+    # data = [f"{H_w[i] * H_r} {M_w[i] * M_r}" for i in range(len(H_w))]
     
-    print('Test data:')
-    print("\n".join(data))
+    # print('Test data:')
+    # print("\n".join(data))
     
-    optimize_main(data, {
+    # optimize_main(data, {
+    #     "T": T,
+    #     "mu_r": mu_r,
+    #     "H_r": H_r,
+    #     "ro_r": ro_r,
+    #     "mu_0": mu_0,
+    #     "k_b": k_b,
+    #     "I": I,
+    #     "mu_min": mu_min,
+    #     "mu_step": mu_step,
+    #     "step": step,
+    # }, M_r=M_r)
+    result = get_minimization_result({
         "T": T,
         "mu_r": mu_r,
         "H_r": H_r,
@@ -65,10 +80,10 @@ def test():
         "mu_0": mu_0,
         "k_b": k_b,
         "I": I,
-        "mu_min": mu_min,
-        "mu_step": mu_step,
-        "step": step,
-    }, M_r=M_r)
+        "M_r": M_r,
+        "n": len(H_w),
+    }, test_mus, H_w, M_w)
+    print(f'Result: {result}')
 
 
 if __name__ == "__main__":

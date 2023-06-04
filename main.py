@@ -29,12 +29,11 @@ def optimize_main(data, params, M_r=None):
     H_w = [h / H_r for h in H]
     M_w = [m / M_r for m in M]
 
-    a = 1000 / M_r # mu_r * ro_r = 10^(-19) * 10^22 = 1000
-    b = (mu_0 * 1 * 1) / (k_b * T) # Степени 10 сократились
+    a = 10 ** 3 / M_r # mu_r * ro_r = 10^(-19) * 10^22 = 1000
+    b = (mu_0 * 10 ** (-2) * H_r) / (k_b * T) # Степени 10 сократились
 
     mu_border = -10000
     bounds = [
-        [0, 10],
         [0, 10],
     ]
     bounds.extend([[0, 1] for _ in range(I)])
@@ -44,6 +43,7 @@ def optimize_main(data, params, M_r=None):
     cur_mu_min = mu_min
     result = []
     not_success = False
+
     while True:
         if not not_success:
             mus = get_mus(cur_mu_min, mu_step, I)
@@ -72,14 +72,14 @@ def optimize_main(data, params, M_r=None):
             constraints=constraints
         )
         
-        print(f'Res result: {res.success}')
+        print(f'Minimization is success: {res.success}')
         if not res.success:
             not_success = True
             continue
 
-        print(f'Res result: {res.fun}')
-        found_params = list(res.x)[2:]
-        ro = res.x[0] * 10 ** res.x[1]
+        print(f'Minimization result: {res.fun}')
+        found_params = list(res.x)[1:]
+        ro = res.x[0] * 10 ** 22
         result.append(OptimizationResult(found_params, mus, ro))
 
     div = 8 * I - 1
@@ -119,3 +119,43 @@ def optimize_main(data, params, M_r=None):
     plt.grid()
     plt.scatter(x, y)
     plt.show()
+
+
+def get_minimization_result(args, mus, H, M):
+    I = args['I']
+    n = args['n']
+    M_r = args['M_r']
+    mu_0 = args['mu_0']
+    H_r = args['H_r']
+    k_b = args['k_b']
+    T = args['T']
+
+    a = 10 ** 3 / M_r
+    b = (mu_0 * 10 ** (-2) * H_r) / (k_b * T)
+    
+    constraints = ({'type': 'eq', "fun": constraint})
+    bounds = [
+        [0, 100],
+    ]
+    bounds.extend([[0, 1] for _ in range(I)])
+    
+    while True:
+        initial_guess = get_start_guess(I)
+        
+        fun = lambda p: optimization_func(p, mus, n, a, b, H, M)
+        res = minimize(
+            fun,
+            initial_guess,
+            bounds=bounds,
+            constraints=constraints
+        )
+        print(f'Minimization is success: {res.success}')
+
+        if res.success:
+            print(f'Minimization result: {res.fun}')
+            
+            found_params = list(res.x)[1:]
+            ro = res.x[0] * 10 ** 22
+            result = OptimizationResult(found_params, mus, ro)
+
+            return result
