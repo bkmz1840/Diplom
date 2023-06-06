@@ -9,6 +9,7 @@ from functions import (
 from opt_function import M_func
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # Args
@@ -21,9 +22,9 @@ H_r = 100
 M_r = None  # максимум по M
 n = None  # количество данных
 I = 6
-mu_min = 0.1
-mu_step = 1
-step = 0.2
+mu_min = 0.65
+mu_step = 2.5
+step = 0.01
 
 
 def test():
@@ -131,6 +132,106 @@ def test_with_offset():
     draw_plot(results, test_data=[test_mus, test_params[1:]])
 
 
+def test_find_mu():
+    H_w, M_w, M_r, a, b = get_start_data(H_r, mu_0, k_b, T, evaluate_M=True)
+    
+    cur_mu = mu_min
+    cur_mu_step = mu_step
+    interations_count = 25
+    muses_checked = 0
+    muses = []
+    backed_M = []
+    offsets = []
+    
+    while cur_mu > 0:
+        mus = get_mus(cur_mu, cur_mu_step, I)
+        muses.append(mus)
+        
+        val, x, _ = get_minimization_result({
+            'I': I,
+            'n': len(M_w),
+            'M_r': M_r,
+            'mu_0': mu_0,
+            'H_r': H_r,
+            'k_b': k_b,
+            'T': T,
+        }, mus, H_w, M_w, interations_count)
+        
+        print('*' * 11)
+        print(f'Min val: {val}')
+        print(f'Found: ro = {x[0]}, p_k = {x[1:]}')
+        
+        back_M = [M_func(x, a, b, mus, h) for h in H_w]
+        backed_M.append(back_M)
+        
+        max_offset = -1000
+        for i in range(len(M_w)):
+            offset = abs(M_w[i] - back_M[i])
+            
+            if offset > max_offset:
+                max_offset = offset
+
+        offsets.append(max_offset)
+        print(f'Max offset: {max_offset}')
+        
+        muses_checked += 1
+        cur_mu_step -= 0.2
+        
+        if muses_checked == 5:
+            draw_result_plot(H_w, M_w, backed_M, max_offsets=offsets, muses=muses)
+            muses.clear()
+            offsets.clear()
+            backed_M.clear()
+            muses_checked = 0
+            
+            cur_mu -= step
+            cur_mu_step = mu_step
+
+
+def test_mu():
+    H_w, M_w, M_r, a, b = get_start_data(H_r, mu_0, k_b, T, evaluate_M=True)
+    
+    mus = get_mus(mu_min, mu_step, I)
+    interations_count = 25
+    try_count = 10
+    offsets = []
+    
+    for try_i in range(try_count):
+        print('*' * 11 + '\n' + f'Try {try_i + 1}\n' + '*' * 11)
+        
+        val, x, _ = get_minimization_result({
+            'I': I,
+            'n': len(M_w),
+            'M_r': M_r,
+            'mu_0': mu_0,
+            'H_r': H_r,
+            'k_b': k_b,
+            'T': T,
+        }, mus, H_w, M_w, interations_count)
+        
+        print(f'Mu_k: {mus}')
+        print(f'Min val: {val}')
+        print(f'Found: ro = {x[0]}, p_k = {x[1:]}')
+        
+        back_M = [M_func(x, a, b, mus, h) for h in H_w]
+        
+        max_offset = -1000
+        for i in range(len(M_w)):
+            offset = abs(M_w[i] - back_M[i])
+            
+            if offset > max_offset:
+                max_offset = offset
+        
+        offsets.append(max_offset)
+        print(f'Max offset: {max_offset}')
+
+    print(f'Min offset: {min(offsets)}')
+    # plt.grid()
+    # plt.plot(H_w, back_M)
+    # plt.scatter(H_w, M_w, color='black')
+    # plt.show()
+
+
 def main():
     args = {
         'T': T,
@@ -151,4 +252,6 @@ def main():
 if __name__ == '__main__':
     # test()  # Простой тест 
     # test_with_offset()  # Тест со сдвигом mu_i
-    main()  # Реальные данные
+    # test_find_mu()  # Тест поиска mu_min для реальных данных
+    test_mu()
+    # main()  # Реальные данные
