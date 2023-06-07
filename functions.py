@@ -119,6 +119,9 @@ def solve(args):
     cur_mu_start = mu_min
     
     init_guess_pos = None
+
+    args['n'] = len(H_w)
+    args['M_r'] = M_r
     
     while True:
         print('*' * 11)
@@ -131,18 +134,11 @@ def solve(args):
         
         if abs(mus[0] - border_mu) <= 10 ** (-6):
             break
-        
-        val, x, found_picked_places = get_minimization_result({
-            'I': I,
-            'n': len(M_w),
-            'M_r': M_r,
-            'mu_0': mu_0,
-            'H_r': H_r,
-            'k_b': k_b,
-            'T': T,
-        }, mus, H_w, M_w, interations_count, init_guess_pos=init_guess_pos)
-        
+
         print(f'mu_i: {mus}')
+        
+        val, x, found_picked_places = find_result_by_mus(args, H_w, M_w, mus, a, b, init_guess_pos=init_guess_pos)
+
         print(f'Min val: {val}')
         print(f'Min x: ro - {x[0]}; p_i - {x[1:]}')
         
@@ -161,6 +157,50 @@ def solve(args):
     
     draw_result_plot(H_w, M_w, backed_M, muses=muses)
     draw_plot(results)
+
+
+def find_result_by_mus(args, H_w, M_w, mus, a, b, init_guess_pos=None):
+    I = args['I']
+    n = args['n']
+    M_r = args['M_r']
+    mu_0 = args['mu_0']
+    H_r = args['H_r']
+    k_b = args['k_b']
+    T = args['T']
+
+    interations_count = 25
+    max_offset = 1
+
+    try_number = 1
+
+    while max_offset >= 0.099:
+        val, x, found_picked_places = get_minimization_result({
+            'I': I,
+            'n': len(M_w),
+            'M_r': M_r,
+            'mu_0': mu_0,
+            'H_r': H_r,
+            'k_b': k_b,
+            'T': T,
+        }, mus, H_w, M_w, interations_count, init_guess_pos=init_guess_pos)
+        
+        back_M = [M_func(x, a, b, mus, h) for h in H_w]
+        
+        max_offset = -1000
+        for i in range(len(M_w)):
+            offset = abs(M_w[i] - back_M[i])
+            
+            if offset > max_offset:
+                max_offset = offset
+        
+        print('*' * 11)
+        print(f'Try {try_number}')
+        print('-' * 11)
+        print(f'Max offset: {max_offset}')
+
+        try_number += 1
+    
+    return val, x, found_picked_places
 
 
 def get_minimization_result(args, mus, H, M, interations_count, init_guess_pos=None):

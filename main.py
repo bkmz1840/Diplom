@@ -24,7 +24,7 @@ n = None  # количество данных
 I = 6
 mu_min = 0.65
 mu_step = 2.5
-step = 0.01
+step = 0.1
 
 
 def test():
@@ -193,12 +193,12 @@ def test_mu():
     
     mus = get_mus(mu_min, mu_step, I)
     interations_count = 25
-    try_count = 10
     offsets = []
     
-    for try_i in range(try_count):
-        print('*' * 11 + '\n' + f'Try {try_i + 1}\n' + '*' * 11)
-        
+    try_number = 1
+    max_offset = 1
+    
+    while max_offset >= 0.099:
         val, x, _ = get_minimization_result({
             'I': I,
             'n': len(M_w),
@@ -209,10 +209,6 @@ def test_mu():
             'T': T,
         }, mus, H_w, M_w, interations_count)
         
-        print(f'Mu_k: {mus}')
-        print(f'Min val: {val}')
-        print(f'Found: ro = {x[0]}, p_k = {x[1:]}')
-        
         back_M = [M_func(x, a, b, mus, h) for h in H_w]
         
         max_offset = -1000
@@ -221,15 +217,22 @@ def test_mu():
             
             if offset > max_offset:
                 max_offset = offset
-        
-        offsets.append(max_offset)
-        print(f'Max offset: {max_offset}')
 
-    print(f'Min offset: {min(offsets)}')
-    # plt.grid()
-    # plt.plot(H_w, back_M)
-    # plt.scatter(H_w, M_w, color='black')
-    # plt.show()
+        print('*' * 11)
+        print(f'Try {try_number}')
+        print('-' * 11)
+        print(f'Max offset: {max_offset}')
+        try_number += 1
+
+    print('\n\n\n' + '*' * 11 + f'\nTotal tries: {try_number - 1}')
+    print(f'Mu_k: {mus}')
+    print(f'Min val: {val}')
+    print(f'Found: ro = {x[0]}, p_k = {x[1:]}')
+    
+    plt.grid()
+    plt.plot(H_w, back_M)
+    plt.scatter(H_w, M_w, color='black')
+    plt.show()
 
 
 def main():
@@ -253,5 +256,5 @@ if __name__ == '__main__':
     # test()  # Простой тест 
     # test_with_offset()  # Тест со сдвигом mu_i
     # test_find_mu()  # Тест поиска mu_min для реальных данных
-    test_mu()
-    # main()  # Реальные данные
+    # test_mu()
+    main()  # Реальные данные
