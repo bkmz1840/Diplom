@@ -236,6 +236,9 @@ def find_result_by_mus(
         )
 
         try_number += 1
+        
+        if try_number > 100 and max_offset < 0.2:
+            break
     
     res_arr[index] = val
     
