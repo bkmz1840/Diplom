@@ -1,3 +1,4 @@
+from concurrent.futures import ProcessPoolExecutor
 from scipy.optimize import minimize
 
 from opt_function import (
@@ -7,8 +8,10 @@ from opt_function import (
     M_func,
 )
 
+import ctypes
 import numpy as np
 import matplotlib.pyplot as plt
+import multiprocessing as mp
 
 
 def form_input(data):
@@ -30,6 +33,26 @@ def get_mus(start, step, count):
         result.append(current)
     
     return result
+
+
+def generate_mus(start, step, row_step, count):
+    res = []
+    border = None
+    cur_start = start
+    
+    while True:
+        mus = get_mus(cur_start, step, count)
+        
+        if border is None:
+            border = mus[1]
+        
+        if mus[0] >= border:
+            break
+        
+        res.append(mus)
+        cur_start += row_step
+    
+    return res
 
 
 def get_start_data(H_r, mu_0, k_b, T, evaluate_M=False):
@@ -108,58 +131,66 @@ def solve(args):
     
     H_w, M_w, M_r, a, b = get_start_data(H_r, mu_0, k_b, T, evaluate_M=True)
     
-    interations_count = 50
-    
-    results = []
-    backed_M = []
-    
-    muses = []
-    border_mu = None
-    mus = None
-    cur_mu_start = mu_min
-    
-    init_guess_pos = None
-
     args['n'] = len(H_w)
     args['M_r'] = M_r
     
-    while True:
-        print('*' * 11)
-        print(f'Positions: {init_guess_pos}')
+    muses = generate_mus(mu_min, mu_step, step, I)
+    one_res_len = (1 + I + 1)
+    res_arr_len = one_res_len * len(muses)  # (val + p_k + ro) * mu_k_j
+    
+    shared_arr = mp.RawArray(ctypes.c_double, res_arr_len)
+    queue = mp.JoinableQueue()
+    
+    for i in range(len(muses)):
+        queue.put(i)
+    
+    res_index = 0
+    
+    for i in range(len(muses)):
+        worker = mp.Process(
+            target=find_result_by_mus,
+            args=(
+                args,
+                H_w, M_w, muses[i], a, b,
+                shared_arr, res_index, queue
+            )
+        )
+        worker.start()
         
-        mus = get_mus(cur_mu_start, mu_step, I)
+        res_index += one_res_len
+    
+    queue.join()
+    
+    min_res = np.reshape(np.frombuffer(shared_arr), (len(muses), one_res_len))
+    results = []
+    backed_M = []
+    
+    for i, r in enumerate(min_res):
+        mus = muses[i]
+        val = r[0]
+        x = r[1:]
         
-        if border_mu is None:
-            border_mu = mus[1]
-        
-        if abs(mus[0] - border_mu) <= 10 ** (-6):
-            break
-
         print(f'mu_i: {mus}')
-        
-        val, x, found_picked_places = find_result_by_mus(args, H_w, M_w, mus, a, b, init_guess_pos=init_guess_pos)
-
         print(f'Min val: {val}')
         print(f'Min x: ro - {x[0]}; p_i - {x[1:]}')
         
-        # if init_guess_pos is None:
-        #     init_guess_pos = found_picked_places
-        
-        muses.append(mus)
         p = x[1:]
         for i in range(len(mus)):
             results.append((mus[i], p[i]))
         
         back_M = [M_func(x, a, b, mus, h) for h in H_w]
         backed_M.append(back_M)
-        
-        cur_mu_start += step
     
     draw_result_plot(H_w, M_w, backed_M, muses=muses)
     draw_plot(results)
 
 
-def find_result_by_mus(args, H_w, M_w, mus, a, b, init_guess_pos=None):
+def find_result_by_mus(
+    args,
+    H_w, M_w, mus, a, b,
+    res_arr, index, queue,
+    init_guess_pos=None
+):
     I = args['I']
     n = args['n']
     M_r = args['M_r']
@@ -168,12 +199,14 @@ def find_result_by_mus(args, H_w, M_w, mus, a, b, init_guess_pos=None):
     k_b = args['k_b']
     T = args['T']
 
-    interations_count = 25
+    interations_count = 50
     max_offset = 1
 
     try_number = 1
+    
+    print(f'Start try: {mus[0]}')
 
-    while max_offset >= 0.099:
+    while max_offset > 0.09:
         val, x, found_picked_places = get_minimization_result({
             'I': I,
             'n': len(M_w),
@@ -193,14 +226,24 @@ def find_result_by_mus(args, H_w, M_w, mus, a, b, init_guess_pos=None):
             if offset > max_offset:
                 max_offset = offset
         
-        print('*' * 11)
-        print(f'Try {try_number}')
-        print('-' * 11)
-        print(f'Max offset: {max_offset}')
+        print(
+            '*' * 11,
+            f'Try {try_number}, ({mus[0]})',
+            '-' * 11,
+            f'Max offset: {max_offset}, ({mus[0]})',
+            '*' * 11,
+            sep='\n'
+        )
 
         try_number += 1
     
-    return val, x, found_picked_places
+    res_arr[index] = val
+    
+    for i in range(index + 1, index + 1 + len(x)):
+        res_arr[i] = x[i - index - 1]
+    
+    print(f'\n\n\n TASK DONE ({mus[0]}) \n\n')
+    queue.task_done()
 
 
 def get_minimization_result(args, mus, H, M, interations_count, init_guess_pos=None):

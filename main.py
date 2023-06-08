@@ -22,9 +22,9 @@ H_r = 100
 M_r = None  # максимум по M
 n = None  # количество данных
 I = 6
-mu_min = 0.65
-mu_step = 2.5
-step = 0.1
+mu_min = 0.57
+mu_step = 1.5
+step = 0.3
 
 
 def test():
@@ -257,4 +257,5 @@ if __name__ == '__main__':
     # test_with_offset()  # Тест со сдвигом mu_i
     # test_find_mu()  # Тест поиска mu_min для реальных данных
     # test_mu()
+    # test_asio()
     main()  # Реальные данные
